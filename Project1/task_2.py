@@ -1,4 +1,4 @@
-from rdd import RDD
+from Project1.rdd import RDD
 
 year = RDD("./datasets/artists.csv").map(lambda line: line.split(",")[4]).min()
 

@@ -1,4 +1,4 @@
-from rdd import RDD
+from Project1.rdd import RDD
 
 count = RDD("./datasets/albums.csv").map(lambda line: line.split(",")[3]).distinct().count()
 
