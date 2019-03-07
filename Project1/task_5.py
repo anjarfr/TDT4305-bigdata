@@ -12,8 +12,8 @@ genres = rdd.map(lambda line:  (''.join(line.split(',')[3]), int(line.split(',')
 sortbysales = genres.reduceByKey(add)
 
 # sortByKey() sorts alphabetically. sortBy() sorts by number of sales in descending order
-comp_sort = sortbysales.sortByKey().sortBy(lambda x: x[1], ascending=False)
+completed = sortbysales.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
 # Save to TSV file
-lines = sorted.map(toTSVLine)
+lines = completed.map(toTSVLine)
 lines.saveAsTextFile('./datasets/result_5')

@@ -3,14 +3,13 @@ from operator import add
 
 rdd = RDD("./datasets/artists.csv")
 
+# map every line to key/value pairs for fast reduce and sorting
 countries = rdd.map(lambda line: (''.join(line.split(',')[5]), 1))
 count = countries.reduceByKey(add)
-sorted = count.sortByKey().sortBy(lambda x: x[1], ascending=False)
-
-print(sorted.collect())
+completed = count.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
 #sorted.map(lambda x: '{country}\t{count}'.format(country=x[0], count=x[1])).coalesce(1).saveAstextFile("./datasets/result_3")
 
-lines = sorted.map(toTSVLine)
-
+# Save to TSV file
+lines = completed.map(toTSVLine)
 lines.saveAsTextFile('./datasets/result_3')
