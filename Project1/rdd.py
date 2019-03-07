@@ -30,3 +30,6 @@ def RDD(filePath):
     path = filePath
     RDD = sc.textFile(name=path)
     return RDD
+
+def toTSVLine(data):
+  return '\t'.join(str(d) for d in data)

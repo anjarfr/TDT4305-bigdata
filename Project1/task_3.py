@@ -1,18 +1,16 @@
-from Project1.rdd import RDD
-import csv
-from pyspark import SparkContext as sc
+from Project1.rdd import RDD, toTSVLine
+from operator import add
 
-rdd = RDD("./datasets/testartists.csv")
+rdd = RDD("./datasets/artists.csv")
 
 countries = rdd.map(lambda line: (''.join(line.split(',')[5]), 1))
-count = countries.reduceByKey(lambda x, y: x + y)
+count = countries.reduceByKey(add)
 sorted = count.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
 print(sorted.collect())
 
-def toTSVLine(data):
-  return '\t'.join(str(d) for d in data)
+#sorted.map(lambda x: '{country}\t{count}'.format(country=x[0], count=x[1])).coalesce(1).saveAstextFile("./datasets/result_3")
 
 lines = sorted.map(toTSVLine)
 
-lines.saveAsTextFile('./datasets/result_3.csv')
+lines.saveAsTextFile('./datasets/result_3')
