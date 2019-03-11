@@ -1,4 +1,4 @@
-from Project1.rdd import RDD
+from rdd import RDD
 
 rdd1 = RDD('./datasets/artists.csv')
 rdd2 = RDD('./datasets/albums.csv')

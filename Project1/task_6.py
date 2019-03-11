@@ -1,4 +1,4 @@
-from Project1.rdd import RDD, toTSVLine
+from rdd import RDD
 from pyspark import SparkContext, SparkConf
 
 
@@ -7,7 +7,7 @@ from pyspark import SparkContext, SparkConf
 rdd = RDD('./datasets/albums.csv')
 
 # Create key/value pairs of (album id, average critic)
-critics = rdd.map(lambda line: line.split(',')).map(lambda x: (x[0], (x[7]+x[8]+x[9])/3))
+critics = rdd.map(lambda line: line.split(',')).map(lambda x: (x[0], (float(x[7])+float(x[8])+float(x[9]))/3))
 
 
 # sortByKey() sorts alphabetically. sortBy() sorts by number of sales in descending order

@@ -3,8 +3,7 @@ from rdd import RDD, toTSVLine
 def find_name(line):
     if line[2]:
         return line[2]
-    else:
-        return line[1]
+    return line[1]
 
 
 albums = RDD('./datasets/albums.csv').map(lambda line: line.split(',')).map(lambda col: (col[1], col[8])).filter(lambda album: album[1] == "5")
