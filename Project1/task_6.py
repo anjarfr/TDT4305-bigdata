@@ -6,13 +6,14 @@ from pyspark import SparkContext, SparkConf
 # RDD from text file
 rdd = RDD('./datasets/albums.csv')
 
-# Create key/value pairs of album id and average critic
+# Create key/value pairs of (album id, average critic)
 critics = rdd.map(lambda line: line.split(',')).map(lambda x: (x[0], (x[7]+x[8]+x[9])/3))
 
 
 # sortByKey() sorts alphabetically. sortBy() sorts by number of sales in descending order
 sortedreview = critics.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
+# Get the 10 best albums based on avg critic
 sc = SparkContext.getOrCreate(SparkConf())
 top = sc.parallelize(c=sortedreview.take(10))
 
