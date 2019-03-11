@@ -6,23 +6,9 @@ from pyspark import SparkContext, SparkConf
 # RDD from text file
 rdd = RDD('./datasets/albums.csv')
 
-
 # Create key/value pairs of album id and average critic
-def avg_critic(rs, mtv, mm):
-    return (float(rs)+float(mtv)+float(mm))/3
+critics = rdd.map(lambda line: line.split(',')).map(lambda x: (x[0], (x[7]+x[8]+x[9])/3))
 
-
-def splitline(x):
-    line = x.split(',')
-    album_id = line[0]
-    rs = line[7]
-    mtv = line[8]
-    mm = line[9]
-    tuple = (album_id, avg_critic(rs, mtv, mm))
-    return tuple
-
-
-critics = rdd.map(lambda line: (splitline(line)))
 
 # sortByKey() sorts alphabetically. sortBy() sorts by number of sales in descending order
 sortedreview = critics.sortByKey().sortBy(lambda x: x[1], ascending=False)

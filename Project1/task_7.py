@@ -16,13 +16,11 @@ artist_ids = rdd2.map(lambda line: line.split(',')).map(lambda col: (col[0], col
 country = rdd3.map(lambda line: line.split(',')).map(lambda col: (col[0], col[5]))
 
 
-criticsjoined = critics.join(artist_ids)
-countryjoined = artist_ids.join(country)
+criticsjoined = artist_ids.join(critics)
 
+flip_ids = criticsjoined.map(lambda line: (line[1][0], (line[0], line[1][1])))
+fulljoin = flip_ids.join(country)
+print(fulljoin.collect())
 
 # Save to TSV file
-#top.map(lambda y: '{var1}\t{var2}'.format(var1=y[0], var2=y[1])).coalesce(1).saveAstextFile("./datasets/result_7/")
-
-
-# lines = top.map(toTSVLine)
-# lines.saveAsTextFile('./datasets/result_6')
+fulljoin.map(lambda line: '{}\t{}\t{}'.format(line[1][0][0], line[1][0][1], line[1][1])).coalesce(1).saveAsTextFile("./datasets/result_7/")
