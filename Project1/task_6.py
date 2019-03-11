@@ -9,7 +9,6 @@ rdd = RDD('./datasets/albums.csv')
 # Create key/value pairs of (album id, average critic)
 critics = rdd.map(lambda line: line.split(',')).map(lambda x: (x[0], (float(x[7])+float(x[8])+float(x[9]))/3))
 
-
 # sortByKey() sorts alphabetically. sortBy() sorts by number of sales in descending order
 sortedreview = critics.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
