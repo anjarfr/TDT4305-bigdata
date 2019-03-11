@@ -1,4 +1,4 @@
-from Project1.rdd import RDD, toTSVLine
+from rdd import RDD, toTSVLine
 from operator import add
 
 rdd = RDD("./datasets/albums.csv")
