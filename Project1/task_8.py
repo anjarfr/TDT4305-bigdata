@@ -6,7 +6,8 @@ def find_name(line):
     return line[1]
 
 
-albums = RDD('./datasets/albums.csv').map(lambda line: line.split(',')).map(lambda col: (col[1], col[8])).filter(lambda album: album[1] == "5")
+albums = RDD('./datasets/albums.csv').map(lambda line: line.split(',')).filter(lambda album: album[8] == "5")
+albums = albums.map(lambda col: (col[1], col[8]))
 
 artists = RDD('./datasets/artists.csv').map(lambda line: line.split(',')).map(lambda col: (col[0], find_name(col)))
 

@@ -8,13 +8,13 @@ sqlContext = SQLContext(sc)
 albums_df = sqlContext.read.csv('./datasets/albums.csv')
 oldColumns = albums_df.schema.names
 newColumns = ["id", "artist_id", "album_title", "genre", "year_of_pub", "num_of_tracks", "num_of_sales", "rolling_stone_critic", "mtv_critic", "music_maniac_critic"]
-albums_df = reduce(lambda data, idx: data.withColumnRenamed(oldColumns[idx], newColumns[idx]), xrange(len(oldColumns)), albums_df)
+albums_df = reduce(lambda data, idx: data.withColumnRenamed(oldColumns[idx], newColumns[idx]), range(len(oldColumns)), albums_df)
 
 # Making DF for artists and renaming columns
 artists_df = sqlContext.read.csv('./datasets/artists.csv')
 oldColumns = artists_df.schema.names
 newColumns = ["id", "real_name", "art_name", "role", "year_of_birth", "country", "city", "email", "zip_code"]
-artists_df = reduce(lambda data, idx: data.withColumnRenamed(oldColumns[idx], newColumns[idx]), xrange(len(oldColumns)), artists_df)
+artists_df = reduce(lambda data, idx: data.withColumnRenamed(oldColumns[idx], newColumns[idx]), range(len(oldColumns)), artists_df)
 
 # Number og distinct artists
 artists_df.agg(countDistinct(col("id")).alias("count")).show()
