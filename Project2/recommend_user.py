@@ -13,13 +13,20 @@ def RDD(filePath):
     rdd = sc.textFile(name=path)
     rdd = rdd.map(lambda line: tuple(line.split('\t')))
     rdd = rdd.reduceByKey(add)
-    rdd = rdd.map(lambda line: (line[0], (line[1].split(' '), 0)))
+    rdd = rdd.map(lambda line: (line[0], line[1].split(' ')))
     return rdd
 
 
+def compare(user_name, x):
+
+
+
+
 def counter(user_name, rdd):
-    list_word = rdd.lookup(user_name)[0][0]
-    rdd.foreach(f)
+    similarity_rdd = rdd
+    list_word = rdd.lookup(user_name)[0]
+    rdd.lookup()
+    rdd.foreach(lambda x:  compare(user_name, x))
 
 
 # Metoden.
