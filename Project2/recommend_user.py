@@ -38,7 +38,7 @@ def counter(user_name, rdd):
 def recommend_user(user_name, k, file_path, output_path):
     rdd = RDD(file_path)
     counted = counter(user_name=user_name, rdd=rdd)
-    sorted = counted.sortBy(lambda x: x[1])
+    sorted = counted.sortBy(lambda x: x[1], ascending=False)
 
     sc = SparkContext.getOrCreate(SparkConf())
     recommendation = sc.parallelize(c=sorted.take(10))
