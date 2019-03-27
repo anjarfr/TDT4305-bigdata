@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pyspark import SparkConf, SparkContext
 from operator import add
-sc = SparkContext.getOrCreate(SparkConf())
+
 
 
 # Lager RDD som map. Brukernavn er Key. Value er en liste med strings.
@@ -39,7 +39,9 @@ def recommend_user(user_name, k, file_path, output_path):
     rdd = RDD(file_path)
     counted = counter(user_name=user_name, rdd=rdd)
     sorted = counted.sortBy(lambda x: x[1])
-    recommendation = sorted.take(k)
+
+    sc = SparkContext.getOrCreate(SparkConf())
+    recommendation = sc.parallelize(c=sorted.take(10))
     recommendation.map(lambda x: '{username}\t{count}'.format(username=x[0], count=x[1])).saveAsTextFile(output_path)
 
 
