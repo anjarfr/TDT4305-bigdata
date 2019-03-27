@@ -42,7 +42,7 @@ def recommend_user(user_name, k, file_path, output_path):
     counted = counter(user_name=user_name, rdd=rdd)
     user_rdd = sc.parallelize([(user_name, 1)])
     removed = counted.subtractByKey(user_rdd)
-    sorted = removed.sortBy(lambda x: x[1], ascending=False)
+    sorted = removed.sortByKey().sortBy(lambda x: x[1], ascending=False)
 
     recommendation = sc.parallelize(c=sorted.take(10))
     recommendation.map(lambda x: '{username}\t{count}'.format(username=x[0], count=x[1])).saveAsTextFile(output_path)
