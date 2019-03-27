@@ -13,7 +13,7 @@ def RDD(filePath):
     rdd = sc.textFile(name=path)
     rdd = rdd.map(lambda line: tuple(line.split('\t')))
     rdd = rdd.reduceByKey(add)
-    rdd = rdd.map(lambda line: (line[0], (line[1].split(' '), 0)))
+    rdd = rdd.map(lambda line: (line[0], line[1].split(' ')))
     return rdd
 
 
@@ -30,14 +30,21 @@ def compare(user_list, x):
 
 def counter(user_name, rdd):
     user_list = rdd.lookup(user_name)[0]
-    rdd.foreach(lambda x: compare(user_list, x))
-    return rdd
+    similar = rdd.map(lambda x: compare(user_list, x))
+    return similar
 
+
+def sort(rdd):
+    sorted = rdd.sortBy(lambda x: x[1])
+    return sorted
 
 # Metoden.
 def recommend_user(user_name, k, file_path, output_path):
+    rdd = RDD(file_path)
+    counted = counter(user_name=user_name, rdd=rdd)
+    sorted = sort(counted)
+    recommendation = sorted.take(k)
+    recommendation.map(lambda x: '{username}\t{count}'.format(username=x[0], count=x[1])).saveAsTextFile(output_path)
 
 
-
-rdd = RDD('./Dataset/tweets.tsv')
-print counter('98kenedy', rdd).take(10)
+recommend_user('98kenedy', 10, './Dataset/tweets.tsv', './Dataset/result.tsv')
