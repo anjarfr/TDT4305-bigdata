@@ -13,20 +13,25 @@ def RDD(filePath):
     rdd = sc.textFile(name=path)
     rdd = rdd.map(lambda line: tuple(line.split('\t')))
     rdd = rdd.reduceByKey(add)
-    rdd = rdd.map(lambda line: (line[0], line[1].split(' ')))
+    rdd = rdd.map(lambda line: (line[0], (line[1].split(' '), 0)))
     return rdd
 
 
-def compare(user_name, x):
-
-
+def compare(user_list, x):
+    x_list = x[1]
+    count = 0
+    for word in user_list:
+        if word in x_list:
+            count += 1
+            x_list.remove(word)
+    new_x = (x[0], count)
+    return new_x
 
 
 def counter(user_name, rdd):
-    similarity_rdd = rdd
-    list_word = rdd.lookup(user_name)[0]
-    rdd.lookup()
-    rdd.foreach(lambda x:  compare(user_name, x))
+    user_list = rdd.lookup(user_name)[0]
+    rdd.foreach(lambda x: compare(user_list, x))
+    return rdd
 
 
 # Metoden.
@@ -35,5 +40,4 @@ def recommend_user(user_name, k, file_path, output_path):
 
 
 rdd = RDD('./Dataset/tweets.tsv')
-print rdd.take(1)
-print counter('98kenedy', rdd)
+print counter('98kenedy', rdd).take(10)
