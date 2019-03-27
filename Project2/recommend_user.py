@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pyspark import SparkConf, SparkContext
 from operator import add
-
+sc = SparkContext.getOrCreate(SparkConf())
 
 
 # Lager RDD som map. Brukernavn er Key. Value er en liste med strings.
@@ -36,11 +36,14 @@ def counter(user_name, rdd):
 
 # Metoden.
 def recommend_user(user_name, k, file_path, output_path):
+    sc = SparkContext.getOrCreate(SparkConf())
+
     rdd = RDD(file_path)
     counted = counter(user_name=user_name, rdd=rdd)
-    sorted = counted.sortBy(lambda x: x[1], ascending=False)
+    user_rdd = sc.parallelize([(user_name, 1)])
+    removed = counted.subtractByKey(user_rdd)
+    sorted = removed.sortBy(lambda x: x[1], ascending=False)
 
-    sc = SparkContext.getOrCreate(SparkConf())
     recommendation = sc.parallelize(c=sorted.take(10))
     recommendation.map(lambda x: '{username}\t{count}'.format(username=x[0], count=x[1])).saveAsTextFile(output_path)
 
